@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Chess Scout",
+  "version": "1.0.0",
+  "description": "Display opponent scouting cards on chess.com when a game starts",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.chess.com/*",
+    "*://api.chess.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chess.com/game/*",
+        "https://*.chess.com/game/*",
+        "https://chess.com/member/*",
+        "https://*.chess.com/member/*",
+        "https://chess.com/profile/*",
+        "https://*.chess.com/profile/*",
+        "https://chess.com/live",
+        "https://*.chess.com/live"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  }
+}
