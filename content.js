@@ -12,11 +12,18 @@ function injectBadge(username, container) {
 
   badge.addEventListener('click', e => {
     e.stopPropagation();
+    
+    // Detect mode for in-game scouting
+    let initialMode = 'summary';
+    if (detectPageType() === 'game') {
+      initialMode = detectCurrentGameMode();
+    }
+
     showLoading(); // From card.js
     fetchOpponentData(username) // From api.js
       .then(raw => {
         const scoutData = computeScoutData(raw, username); // From compute.js
-        showModal(createCard(scoutData)); // From card.js
+        showModal(createCard(scoutData, initialMode)); // From card.js
       })
       .catch(err => {
         console.error('[Chess Scout]', err);
@@ -35,37 +42,46 @@ function detectPageType() {
   return 'other';
 }
 
+/**
+ * Detect the game mode (rapid, blitz, bullet, daily) from the DOM or URL
+ */
+function detectCurrentGameMode() {
+  // 1. Check URL
+  if (window.location.pathname.includes('/game/daily/')) return 'daily';
+  
+  // 2. Check for the "Time:" indicator in the sidebar (common in live games)
+  const sidebar = document.body.textContent;
+  if (sidebar.includes('Rapid') || sidebar.includes('10 min') || sidebar.includes('15 | 10')) return 'rapid';
+  if (sidebar.includes('Blitz') || sidebar.includes('3 min') || sidebar.includes('5 min') || sidebar.includes('3 | 2')) return 'blitz';
+  if (sidebar.includes('Bullet') || sidebar.includes('1 min') || sidebar.includes('2 | 1')) return 'bullet';
+  
+  // 3. Fallback to common Chess.com internal state if reachable (experimental)
+  try {
+    const timeClass = window.chesscom?.game?.timeClass || window.Config?.game?.timeClass;
+    if (timeClass) return timeClass;
+  } catch(e) {}
+
+  return 'summary'; // Default to summary if unsure
+}
+
 function extractUsernameFromUrl() {
   const parts = window.location.pathname.split('/');
   return parts[parts.length - 1] || parts[parts.length - 2];
 }
 
-function extractUsernameFromTagline(el) {
-  // Try various Chess.com name selectors
-  const selectors = [
-    '.cc-user-username-component',
-    '.user-tagline-username',
-    '[class*="username-component"]',
-    '[class*="user-username"]'
-  ];
-  for (const s of selectors) {
-    const found = el.querySelector(s);
-    if (found && found.textContent.trim()) return found.textContent.trim();
-  }
-  return null;
-}
-
 function handleGamePage() {
   const observer = new MutationObserver(() => {
-    // Scan for all player tagline containers
-    const containers = document.querySelectorAll('.user-tagline-component, .player-component, .board-layout-player, .board-layout-top, .board-layout-bottom');
+    // Select all potential name elements directly
+    const nameElements = document.querySelectorAll('[data-test-element="user-tagline-username"], .cc-user-username-component, .user-tagline-username');
     
-    containers.forEach(container => {
-      const username = extractUsernameFromTagline(container);
-      if (username) {
-        // Find the specific identity block or just use the container
-        const identityBlock = container.querySelector('.user-tagline-username, .cc-user-username-component') || container;
-        injectBadge(username, identityBlock.parentElement || identityBlock);
+    nameElements.forEach(el => {
+      const username = el.textContent.trim();
+      // Basic validation: ensure it's a real-looking username and not already badged
+      if (username && username.length > 2 && !el.parentElement.querySelector('.chess-scout-badge')) {
+        // Skip generic labels if they appear
+        if (['Opponent', 'Player', 'You', 'Settings', 'Time'].includes(username)) return;
+        
+        injectBadge(username, el.parentElement || el);
       }
     });
   });

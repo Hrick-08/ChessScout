@@ -2,9 +2,9 @@
 
 .chess-scout-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: #1D9E75; color: white; font-size: 14px;
-  cursor: pointer; margin-left: 8px; transition: all 0.2s;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #1D9E75; color: white; font-size: 12px;
+  cursor: pointer; margin-left: 6px; transition: all 0.2s;
   flex-shrink: 0; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 .chess-scout-badge:hover { transform: scale(1.2); background: #25c08e; }
@@ -32,7 +32,7 @@
 /* Header */
 .cs-header {
   display: flex; align-items: center; gap: 12px;
-  padding: 20px 24px 16px; position: relative;
+  padding: 20px 24px 12px; position: relative; border-bottom: 1px solid #2a2a2a;
 }
 .cs-username { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
 .cs-online { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; }
@@ -42,10 +42,33 @@
 }
 .cs-close:hover { color: #fff; }
 
+/* Mode Selector */
+.cs-mode-selector {
+  display: flex; gap: 8px; padding: 12px 24px; background: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
+}
+.cs-mode-btn {
+  background: #2a2a2a; border: none; color: #888; padding: 6px 14px;
+  border-radius: 100px; font-size: 11px; font-weight: 700; cursor: pointer;
+  transition: all 0.15s;
+}
+.cs-mode-btn:hover { background: #333; color: #ccc; }
+.cs-mode-btn.active { background: #1D9E75; color: #fff; }
+
+/* Summary Table */
+.cs-summary-container { padding: 24px; background: #222; }
+.cs-stats-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.cs-stats-table th { text-align: left; font-size: 11px; color: #666; text-transform: uppercase; padding: 8px; border-bottom: 1px solid #333; }
+.cs-stats-table td { padding: 12px 8px; border-bottom: 1px solid #2a2a2a; font-weight: 600; }
+.cs-stats-table .name { color: #1D9E75; text-transform: capitalize; }
+.cs-stats-table .win { color: #4caf50; }
+.cs-stats-table .loss { color: #e57373; }
+.cs-stats-table .acc { color: #999; }
+
 /* Top Stats Row */
 .cs-stats-row {
   display: grid; grid-template-columns: repeat(4, 1fr);
-  padding: 0 24px 24px; gap: 12px;
+  padding: 24px 24px 12px; gap: 12px;
 }
 .cs-stat-box .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
 .cs-stat-box .val { font-size: 28px; font-weight: 700; }
@@ -53,7 +76,7 @@
 .cs-stat-box.loss .val { color: #e57373; }
 .cs-stat-box.draw .val { color: #999; }
 
-/* Grid layout */
+/* Sections */
 .cs-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 24px; border-top: 1px solid #2a2a2a; }
 .cs-section-head { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 16px; }
 
@@ -61,7 +84,6 @@
 .cs-rating-item .lbl { font-size: 11px; color: #666; margin-bottom: 4px; }
 .cs-rating-item .val { font-size: 24px; font-weight: 600; }
 
-/* Openings section */
 .cs-openings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 24px; border-top: 1px solid #2a2a2a; }
 .cs-op-row { display: grid; grid-template-columns: 1fr 80px 36px; align-items: center; gap: 12px; margin-bottom: 10px; }
 .cs-op-name { font-size: 13px; font-weight: 600; color: #eee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -69,7 +91,6 @@
 .cs-op-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
 .cs-op-pct { font-size: 12px; text-align: right; font-weight: 600; }
 
-/* Chart Styles */
 .cs-chart-container { padding: 24px; border-top: 1px solid #2a2a2a; }
 .cs-chart-svg { width: 100%; height: 160px; overflow: visible; }
 .cs-chart-line { fill: none; stroke: #1D9E75; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -77,31 +98,17 @@
 .cs-chart-axis { stroke: #333; stroke-width: 1; }
 .cs-chart-label { font-size: 10px; fill: #666; text-anchor: middle; }
 
-/* Outcomes section */
 .cs-outcomes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 24px; border-top: 1px solid #2a2a2a; }
 .cs-outcome-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #252525; font-size: 13px; }
-.cs-outcome-row:last-child { border-bottom: none; }
 .cs-outcome-row .val { font-weight: 700; color: #4caf50; }
 .cs-outcome-row.loss .val { color: #e57373; }
 
-/* Smurf warning */
 .cs-smurf {
   margin: 10px 24px; background: #2e2500; border: 1px solid #5a4500;
   border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #ffa726;
 }
-.cs-smurf b { display: block; margin-bottom: 4px; font-size: 14px; }
 
-/* Skeleton Loading */
-.cs-skeleton-pulse {
-  background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
-  background-size: 200% 100%;
-  animation: cs-shimmer 1.4s ease infinite;
-  border-radius: 4px;
-}
-@keyframes cs-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
+.cs-skeleton-pulse { background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%); background-size: 200% 100%; animation: cs-shimmer 1.4s ease infinite; border-radius: 4px; }
+@keyframes cs-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-/* Footer context */
 .cs-footer { padding: 16px 24px; font-size: 11px; color: #444; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-between; }

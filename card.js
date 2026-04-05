@@ -1,20 +1,65 @@
 /**
  * Card Module - Chess Scout
- * Building the visual dashboard
+ * Building the visual multi-mode dashboard
  */
 
-function buildHeader(d) {
+function buildHeader(d, activeMode) {
   const { profile } = d;
+  const modeLabel = activeMode === 'summary' ? 'All Modes' : activeMode.charAt(0).toUpperCase() + activeMode.slice(1);
   return `
     <div class="cs-header">
       <div class="cs-username">
         ${profile.username} ${profile.status === 'online' ? '<span class="cs-online"></span>' : ''}
+        <span style="font-weight:400; color:#666; font-size:14px; margin-left:8px;">• scouting ${modeLabel}</span>
       </div>
       <button class="cs-close" title="Close">×</button>
     </div>`;
 }
 
+function buildModeSelector(activeMode) {
+  const modes = ['summary', 'rapid', 'blitz', 'bullet', 'daily'];
+  const buttons = modes.map(m => `
+    <button class="cs-mode-btn ${activeMode === m ? 'active' : ''}" data-mode="${m}">
+      ${m.toUpperCase()}
+    </button>`).join('');
+  return `<div class="cs-mode-selector">${buttons}</div>`;
+}
+
+function buildSummaryTable(modes) {
+  const rows = Object.entries(modes).map(([name, data]) => {
+    if (!data) return '';
+    return `
+      <tr class="cs-table-row">
+        <td class="name">${name}</td>
+        <td>${data.totalGames}</td>
+        <td class="win">${data.wins}</td>
+        <td class="loss">${data.losses}</td>
+        <td class="draw">${data.draws}</td>
+        <td class="acc">${data.avgAccWhite || '—'}%</td>
+      </tr>`;
+  }).join('');
+
+  return `
+    <div class="cs-summary-container">
+      <div class="cs-section-head">Performance Overview</div>
+      <table class="cs-stats-table">
+        <thead>
+          <tr>
+            <th>Mode</th>
+            <th>Games</th>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Draws</th>
+            <th>Avg Acc</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
 function buildTopStatsRow(d) {
+  if (!d) return '<div class="cs-stats-row"><div style="color:#666; padding:0 24px;">No data for this mode</div></div>';
   return `
     <div class="cs-stats-row">
       <div class="cs-stat-box">
@@ -37,6 +82,7 @@ function buildTopStatsRow(d) {
 }
 
 function buildRatingAccuracy(d) {
+  if (!d) return '';
   const fmt = (v) => v || '—';
   return `
     <div class="cs-grid-2">
@@ -56,13 +102,14 @@ function buildRatingAccuracy(d) {
       <div style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
         <div class="cs-rating-item" style="text-align: right;">
           <div class="lbl">avg accuracy (white)</div>
-          <div class="val" style="color: #1D9E75;">${d.avgAccWhite}%</div>
+          <div class="val" style="color: #1D9E75;">${d.avgAccWhite ? d.avgAccWhite + '%' : '—'}</div>
         </div>
       </div>
     </div>`;
 }
 
 function buildOpeningsDashboard(d) {
+  if (!d) return '';
   const renderList = (title, list) => {
     const rows = list.map(o => {
       const color = o.winPercent >= 60 ? '#4caf50' : o.winPercent >= 40 ? '#ffa726' : '#e57373';
@@ -84,7 +131,7 @@ function buildOpeningsDashboard(d) {
 }
 
 function buildAccuracyChart(d) {
-  if (!d.accuracyHistory || d.accuracyHistory.length < 2) return '';
+  if (!d || !d.accuracyHistory || d.accuracyHistory.length < 2) return '';
   
   const history = d.accuracyHistory;
   const width = 640;
@@ -112,6 +159,7 @@ function buildAccuracyChart(d) {
 }
 
 function buildOutcomesDashboard(d) {
+  if (!d) return '';
   const renderList = (title, list) => {
     const rows = list.map(([label, count]) => `
       <div class="cs-outcome-row ${label.toLowerCase().includes('lost') ? 'loss' : ''}">
@@ -151,25 +199,51 @@ function buildSkeleton() {
     </div>`;
 }
 
-function createCard(d) {
+function renderCardContent(data, mode) {
+  const d = mode === 'summary' ? data.summary : data.modes[mode];
+  let html = '';
+  
+  if (mode === 'summary') {
+    html += buildSummaryTable(data.modes);
+  }
+  
+  html += buildTopStatsRow(d);
+  html += buildRatingAccuracy(d);
+  html += buildOpeningsDashboard(d);
+  html += buildAccuracyChart(d);
+  html += buildOutcomesDashboard(d);
+  html += buildSmurf(data.isSmurf);
+  
+  return html;
+}
+
+function createCard(data, initialMode = 'summary') {
   const card = document.createElement('div');
   card.className = 'cs-card';
-  card.innerHTML = `
-    ${buildHeader(d)}
-    ${buildTopStatsRow(d)}
-    ${buildRatingAccuracy(d)}
-    ${buildOpeningsDashboard(d)}
-    ${buildAccuracyChart(d)}
-    ${buildOutcomesDashboard(d)}
-    ${buildSmurf(d.isSmurf)}
-    <div class="cs-footer">
-      <span>Chess Scout · stats from last 3 months</span>
-      <span>${d.streak?.count >= 2 ? `${d.streak.type.toUpperCase()}${d.streak.count} streak` : ''}</span>
-    </div>`;
+  
+  const update = (mode) => {
+    card.innerHTML = `
+      ${buildHeader(data, mode)}
+      ${buildModeSelector(mode)}
+      <div class="cs-content-area">
+        ${renderCardContent(data, mode)}
+      </div>
+      <div class="cs-footer">
+        <span>Chess Scout · stats from last 3 months</span>
+        <span>${data.streak?.count >= 2 ? `${data.streak.type.toUpperCase()} ${data.streak.count} streak` : ''}</span>
+      </div>`;
 
-  card.querySelector('.cs-close').addEventListener('click', () => {
-    document.getElementById('cs-backdrop')?.remove();
-  });
+    // Re-attach listeners
+    card.querySelector('.cs-close').addEventListener('click', () => {
+      document.getElementById('cs-backdrop')?.remove();
+    });
+    
+    card.querySelectorAll('.cs-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => update(btn.dataset.mode));
+    });
+  };
+
+  update(initialMode);
   return card;
 }
 
