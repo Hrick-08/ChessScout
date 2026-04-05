@@ -38,6 +38,8 @@
 
 A Chrome Extension (Manifest V3) that displays opponent scouting cards on chess.com when a game starts. Get instant insights into your opponent's playing style, ratings, opening preferences, and more.
 
+</div>
+
 ## Features
 
 - 🎯 **Automatic Opponent Detection** — Displays a scouting card as soon as a game starts
