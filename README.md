@@ -10,7 +10,7 @@ A Chrome Extension (Manifest V3) that displays opponent scouting cards on chess.
 - 🔄 **Smart Caching** — Caches opponent data for 24 hours to reduce API calls
 - ⚡ **Fast Performance** — Parallel API fetches, progressive card rendering
 - 🎨 **Dark UI** — Matches chess.com's dark theme seamlessly
-- 🚨 **Smurf Detection** — Warns if opponent is a new account with high skill indicators
+- 🚨 **Smurf Detection** — Warns if opponent is a new account with high skill indicators [FUTURE SCOPE]
 
 ## Installation
 
