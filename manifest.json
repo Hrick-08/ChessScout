@@ -23,7 +23,7 @@
         "https://chess.com/live",
         "https://*.chess.com/live"
       ],
-      "css": ["content.css"],
+      "css": ["styles.css"],
       "js": ["api.js", "compute.js", "card.js", "content.js"],
       "run_at": "document_start"
     }
