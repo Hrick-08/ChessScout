@@ -1,4 +1,36 @@
-# Chess Scout Chrome Extension
+<div align="center">
+
+```
+ ██████╗██╗  ██╗███████╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝██╔════╝
+██║     ███████║█████╗  ███████╗███████╗
+██║     ██╔══██║██╔══╝  ╚════██║╚════██║
+╚██████╗██║  ██║███████╗███████║███████║
+ ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+
+ ███████╗ ██████╗ ██████╗ ██╗   ██╗████████╗
+ ██╔════╝██╔════╝██╔═══██╗██║   ██║╚══██╔══╝
+ ███████╗██║     ██║   ██║██║   ██║   ██║   
+ ╚════██║██║     ██║   ██║██║   ██║   ██║   
+ ███████║╚██████╗╚██████╔╝╚██████╔╝   ██║   
+ ╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝    ╚═╝   
+```
+
+
+# Chess Scout
+
+
+### Opponent Intelligence for Chess.com
+
+*Instantly analyze your opponent’s ratings, openings, and playstyle before the first move.*
+
+[![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](#)
+[![Chrome](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](#)
+[![Manifest](https://img.shields.io/badge/Manifest-V3-34A853?style=flat-square)](#)
+[![API](https://img.shields.io/badge/Data-Chess.com_Public_API-000000?style=flat-square)](#)
+[![No Framework](https://img.shields.io/badge/Framework-None-lightgrey?style=flat-square)](#)
+
+</div>
 
 A Chrome Extension (Manifest V3) that displays opponent scouting cards on chess.com when a game starts. Get instant insights into your opponent's playing style, ratings, opening preferences, and more.
 
