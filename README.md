@@ -30,13 +30,14 @@ Once published, the extension will be available on the Chrome Web Store.
 
 ```
 Chess Scout/
-├── manifest.json          # Extension configuration (Manifest V3)
-├── content.js             # Main content script with MutationObserver
+├── images                 # Images for icons
 ├── api.js                 # Chess.com API calls and caching
-├── compute.js             # Data parsing and statistics computation
 ├── card.js                # Card UI building
-├── styles.css             # Card styling
-└── README.md              # This file
+├── compute.js             # Data parsing and statistics computation
+├── content.js             # Main content script with MutationObserver
+├── manifest.json          # Extension configuration (Manifest V3)
+├── README.md              # This file
+└── styles.css             # Card styling
 ```
 
 ## How It Works
