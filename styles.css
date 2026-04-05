@@ -2,13 +2,13 @@
 
 .chess-scout-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: #1D9E75; color: white; font-size: 12px;
+  width: 18px; height: 18px; border-radius: 50%;
   cursor: pointer; margin-left: 6px; transition: all 0.2s;
-  flex-shrink: 0; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  flex-shrink: 0; vertical-align: middle;
+  background-size: contain; background-repeat: no-repeat; background-position: center;
+  overflow: hidden;
 }
-.chess-scout-badge:hover { transform: scale(1.2); background: #25c08e; }
-.chess-scout-badge::after { content: '♟'; }
+.chess-scout-badge:hover { transform: scale(1.2); }
 
 .cs-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,0.75);

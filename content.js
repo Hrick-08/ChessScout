@@ -9,6 +9,7 @@ function injectBadge(username, container) {
   const badge = document.createElement('span');
   badge.className = 'chess-scout-badge';
   badge.title = `Scout ${username}`;
+  badge.style.backgroundImage = `url(${chrome.runtime.getURL('images/icon-16.png')})`;
 
   badge.addEventListener('click', e => {
     e.stopPropagation();
@@ -70,23 +71,34 @@ function extractUsernameFromUrl() {
 }
 
 function handleGamePage() {
-  const observer = new MutationObserver(() => {
+  console.log('[Chess Scout] Starting game page observer...');
+  
+  const inject = () => {
     // Select all potential name elements directly
-    const nameElements = document.querySelectorAll('[data-test-element="user-tagline-username"], .cc-user-username-component, .user-tagline-username');
+    const nameElements = document.querySelectorAll('[data-test-element="user-tagline-username"], .cc-user-username-component, .user-tagline-username, [class*="user-username-component"]');
     
+    if (nameElements.length > 0) {
+      console.log(`[Chess Scout] Found ${nameElements.length} potential name elements`);
+    }
+
     nameElements.forEach(el => {
       const username = el.textContent.trim();
-      // Basic validation: ensure it's a real-looking username and not already badged
-      if (username && username.length > 2 && !el.parentElement.querySelector('.chess-scout-badge')) {
-        // Skip generic labels if they appear
-        if (['Opponent', 'Player', 'You', 'Settings', 'Time'].includes(username)) return;
-        
-        injectBadge(username, el.parentElement || el);
+      if (username && username.length > 2) {
+        const container = el.parentElement;
+        if (container && !container.querySelector('.chess-scout-badge')) {
+          if (['Opponent', 'Player', 'You', 'Settings', 'Time'].includes(username)) return;
+          console.log(`[Chess Scout] Injecting badge for: ${username}`);
+          injectBadge(username, container);
+        }
       }
     });
-  });
-  
+  };
+
+  const observer = new MutationObserver(inject);
   observer.observe(document.body, { childList: true, subtree: true });
+  
+  // Initial run
+  inject();
 }
 
 function handleProfilePage() {
