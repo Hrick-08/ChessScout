@@ -30,7 +30,11 @@
 [![API](https://img.shields.io/badge/Data-Chess.com_Public_API-000000?style=flat-square)](#)
 [![No Framework](https://img.shields.io/badge/Framework-None-lightgrey?style=flat-square)](#)
 
-</div>
+---
+
+### 🚀 [See the Full Installation Guide](INSTALL.md)
+
+---
 
 A Chrome Extension (Manifest V3) that displays opponent scouting cards on chess.com when a game starts. Get instant insights into your opponent's playing style, ratings, opening preferences, and more.
 
@@ -46,13 +50,14 @@ A Chrome Extension (Manifest V3) that displays opponent scouting cards on chess.
 
 ## Installation
 
-### For Development
+### For Quick Setup
 
 1. **Clone/Download** this repository to your machine
 2. **Open Chrome** and navigate to `chrome://extensions/`
 3. **Enable "Developer mode"** (toggle at top right)
 4. **Click "Load unpacked"** and select the `Chess Scout` folder
-5. **Visit chess.com** and start a game to see the scouting card
+
+**For more detailed instructions, including Edge/Brave/Firefox (if supported) steps, see the [Installation Guide](installation-guide.md).**
 
 ### For Users
 
