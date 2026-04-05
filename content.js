@@ -40,29 +40,36 @@ function extractUsernameFromUrl() {
   return parts[parts.length - 1] || parts[parts.length - 2];
 }
 
-function extractOpponentUsernameFromGame() {
-  // Chess.com specific selectors
-  const oppLink = document.querySelector('.player-component.top .user-tagline-username, .board-layout-top .user-tagline-username');
-  return oppLink ? oppLink.textContent.trim() : null;
+function extractUsernameFromTagline(el) {
+  // Try various Chess.com name selectors
+  const selectors = [
+    '.cc-user-username-component',
+    '.user-tagline-username',
+    '[class*="username-component"]',
+    '[class*="user-username"]'
+  ];
+  for (const s of selectors) {
+    const found = el.querySelector(s);
+    if (found && found.textContent.trim()) return found.textContent.trim();
+  }
+  return null;
 }
 
-// ===== HANDLERS =====
-
 function handleGamePage() {
-  let lastUsername = null;
   const observer = new MutationObserver(() => {
-    const username = extractOpponentUsernameFromGame();
-    if (username && username !== lastUsername) {
-      lastUsername = username;
-      const links = document.querySelectorAll('a[href*="/member/"], a[href*="/profile/"]');
-      for (const link of links) {
-        if (link.textContent?.toLowerCase().includes(username.toLowerCase())) {
-          injectBadge(username, link.parentElement || link);
-          break;
-        }
+    // Scan for all player tagline containers
+    const containers = document.querySelectorAll('.user-tagline-component, .player-component, .board-layout-player, .board-layout-top, .board-layout-bottom');
+    
+    containers.forEach(container => {
+      const username = extractUsernameFromTagline(container);
+      if (username) {
+        // Find the specific identity block or just use the container
+        const identityBlock = container.querySelector('.user-tagline-username, .cc-user-username-component') || container;
+        injectBadge(username, identityBlock.parentElement || identityBlock);
       }
-    }
+    });
   });
+  
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
